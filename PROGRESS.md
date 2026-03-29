@@ -113,15 +113,16 @@ Single-page application with these sections:
 
 These are the features needed to turn the MVP into a paid product. Build in this order:
 
-### Priority 1: User Authentication
-- [ ] Supabase setup (database + auth)
-- [ ] Email/password signup & login
-- [ ] Google OAuth
-- [ ] JWT session management
-- [ ] Protected routes middleware
-- [ ] User dashboard (replaces current Home section)
+### Priority 1: User Authentication — 🟢 Done
+- [x] Supabase setup (database + auth)
+- [x] Email/password signup & login
+- [x] Google OAuth
+- [x] JWT session management
+- [x] Protected routes middleware
+- [x] User dashboard (replaces current Home section)
 
-### Priority 2: Health Twin (Flagship Feature)
+### Priority 2: Health Twin (Flagship Feature) — 🟡 In Progress
+- [ ] Execute `supabase/schema.sql` in Supabase editor
 - [ ] Database schema for health events
 - [ ] Auto-save every analysis to user's timeline
 - [ ] Timeline view UI (scrollable history)
@@ -185,9 +186,9 @@ RESEND_API_KEY=         # Email service
 
 ## 🐛 Known Issues / Technical Debt
 
-- [ ] All backend routes in ONE file (server.js) — needs splitting into route modules
-- [ ] No database — everything is stateless, no user data persisted
-- [ ] No authentication — anyone can use all features
+- [x] All backend routes in ONE file (server.js) — split into modular `backend/routes/` 
+- [ ] No database — *Authentication added, but records not saving yet*
+- [x] No authentication — *Supabase Auth added and functioning*
 - [ ] Rate limiter is in-memory only — resets on server restart
 - [ ] No input sanitization beyond basic length checks
 - [ ] Sample test images (*.png, *.jpg) in root folder — should be in a /samples or /test folder
@@ -219,18 +220,26 @@ RESEND_API_KEY=         # Email service
 
 ## 📅 Session Log
 
-### Session 1 — March 30, 2026
+### Session 1 — March 30, 2026 (Part 1 - Architecture & MVP Demo)
 **What was done:**
 - Initialized Git repo and pushed to GitHub
 - Created professional README.md with badges, features, API docs
 - Created comprehensive PRODUCT_LAUNCH_PLAN.md (6-month roadmap)
 - Created this progress tracking file
 
-**Next session priorities:**
-1. Set up Supabase project (database + auth)
-2. Restructure codebase (split server.js into modules)
-3. Build user authentication (signup/login/Google OAuth)
+### Session 1 — March 30, 2026 (Part 2 - Auth & Modularization)
+**What was done:**
+- Split `server.js` monolith into clean, modular Express routes (`backend/routes/symptoms`, `reports`, `auth`, etc.)
+- Configured Supabase connection in `backend/config/supabase.js`
+- Built full User Authentication (UI modal, token-based session handling in `public/js/auth.js`)
+- Tested and verified Sign-up/Login flows
+- Created the PostgreSQL schema for the "Health Twin" (`supabase/schema.sql`)
+
+**Next session priorities (START HERE NEXT TIME):**
+1. **Database:** The user needs to paste and run the contents of `supabase/schema.sql` into their Supabase SQL editor to create the `profiles` and `health_events` tables.
+2. **Backend:** Update the analysis routes (symptoms, skin, reports, drugs) so they automatically insert a row into `health_events` if `req.user` is logged in.
+3. **Frontend:** Create the Health Twin Timeline dashboard UI to fetch and display these saved events.
 
 ---
 
-*Last updated: March 30, 2026 — Session 1*
+*Last updated: March 30, 2026 — End of Session 1*

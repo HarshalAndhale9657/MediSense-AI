@@ -331,7 +331,7 @@ async function explainReport() {
         let data;
         
         if (hasImage) {
-            const res = await fetch('/api/explain-report-image', {
+            const res = await fetch('/api/explain-report/image', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -1010,9 +1010,219 @@ function renderSkinResults(data) {
 }
 
 // ============================================
+// Auth UI Functions
+// ============================================
+const AUTH_KEY = 'medisense_auth';
+let authState = { user: null, session: null };
+
+function initAuth() {
+    const saved = localStorage.getItem(AUTH_KEY);
+    if (saved) {
+        try {
+            const data = JSON.parse(saved);
+            authState.user = data.user;
+            authState.session = data.session;
+        } catch {
+            localStorage.removeItem(AUTH_KEY);
+        }
+    }
+    updateAuthUI();
+}
+
+function updateAuthUI() {
+    const loggedIn = !!authState.session?.access_token;
+
+    document.querySelectorAll('[data-auth="logged-in"]').forEach(el => {
+        el.style.display = loggedIn ? '' : 'none';
+    });
+    document.querySelectorAll('[data-auth="logged-out"]').forEach(el => {
+        el.style.display = loggedIn ? 'none' : '';
+    });
+
+    document.querySelectorAll('[data-auth-name]').forEach(el => {
+        el.textContent = authState.user?.fullName || authState.user?.email?.split('@')[0] || 'User';
+    });
+    document.querySelectorAll('[data-auth-email]').forEach(el => {
+        el.textContent = authState.user?.email || '';
+    });
+    document.querySelectorAll('[data-auth-avatar]').forEach(el => {
+        const name = authState.user?.fullName || authState.user?.email || 'U';
+        el.textContent = name.charAt(0).toUpperCase();
+    });
+}
+
+function saveAuth(user, session) {
+    authState.user = user;
+    authState.session = session;
+    localStorage.setItem(AUTH_KEY, JSON.stringify({ user, session }));
+    updateAuthUI();
+}
+
+function getAuthHeaders() {
+    const headers = { 'Content-Type': 'application/json' };
+    if (authState.session?.access_token) {
+        headers['Authorization'] = `Bearer ${authState.session.access_token}`;
+    }
+    return headers;
+}
+
+function openAuthModal() {
+    document.getElementById('authModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeAuthModal() {
+    document.getElementById('authModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function toggleAuthForm(e) {
+    e.preventDefault();
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const subtitle = document.getElementById('authSubtitle');
+    const switchText = document.getElementById('authSwitchText');
+    const switchLink = document.getElementById('authSwitchLink');
+
+    if (loginForm.style.display !== 'none') {
+        loginForm.style.display = 'none';
+        signupForm.style.display = '';
+        subtitle.textContent = 'Create your account to start tracking health';
+        switchText.textContent = 'Already have an account?';
+        switchLink.textContent = 'Sign In';
+    } else {
+        loginForm.style.display = '';
+        signupForm.style.display = 'none';
+        subtitle.textContent = 'Sign in to unlock your personal Health Twin';
+        switchText.textContent = "Don't have an account?";
+        switchLink.textContent = 'Sign Up';
+    }
+}
+
+function toggleUserMenu() {
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.classList.toggle('active');
+}
+
+// Close user dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    const dropdown = document.getElementById('userDropdown');
+    const avatar = document.querySelector('.btn-avatar');
+    if (dropdown && !dropdown.contains(e.target) && !avatar?.contains(e.target)) {
+        dropdown.classList.remove('active');
+    }
+});
+
+// Close auth modal on overlay click
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('auth-modal-overlay')) {
+        closeAuthModal();
+    }
+});
+
+async function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const btn = document.getElementById('loginSubmitBtn');
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+
+    try {
+        const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Login failed');
+
+        saveAuth(data.user, data.session);
+        closeAuthModal();
+        showToast(`Welcome back, ${data.user.fullName || data.user.email}! 👋`, 'success');
+    } catch (error) {
+        showToast(error.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+    }
+}
+
+async function handleSignup(e) {
+    e.preventDefault();
+    const fullName = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    const btn = document.getElementById('signupSubmitBtn');
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+
+    try {
+        const res = await fetch('/api/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, fullName })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Signup failed');
+
+        if (data.session) {
+            saveAuth(data.user, data.session);
+            closeAuthModal();
+            showToast(`Welcome to MediSense AI, ${fullName || email}! 🎉`, 'success');
+        } else {
+            closeAuthModal();
+            showToast('Account created! Please check your email to verify.', 'success');
+        }
+    } catch (error) {
+        showToast(error.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+    }
+}
+
+async function handleLogout() {
+    try {
+        await fetch('/api/auth/logout', {
+            method: 'POST',
+            headers: getAuthHeaders()
+        });
+    } catch { /* ignore */ }
+
+    authState = { user: null, session: null };
+    localStorage.removeItem(AUTH_KEY);
+    updateAuthUI();
+    document.getElementById('userDropdown')?.classList.remove('active');
+    showToast('Signed out successfully.', 'info');
+}
+
+async function handleGoogleLogin() {
+    try {
+        const res = await fetch('/api/auth/google', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ redirectUrl: window.location.origin })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Google sign-in failed');
+
+        if (data.url) window.location.href = data.url;
+    } catch (error) {
+        showToast(error.message, 'error');
+    }
+}
+
+// ============================================
 // Init
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
+    initAuth();
     initNavigation();
     initImageUpload();
     initSkinUpload();
