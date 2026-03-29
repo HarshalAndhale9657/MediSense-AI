@@ -1,4 +1,4 @@
-<![CDATA[<div align="center">
+<div align="center">
 
 # 🏥 MediSense AI
 
@@ -15,7 +15,7 @@
 
 <br/>
 
-[🚀 Getting Started](#-getting-started) · [✨ Features](#-features) · [🏗️ Architecture](#️-architecture) · [📖 API Reference](#-api-reference) · [🤝 Contributing](#-contributing)
+[🚀 Getting Started](#-getting-started) &nbsp;·&nbsp; [✨ Features](#-features) &nbsp;·&nbsp; [🏗️ Architecture](#️-architecture) &nbsp;·&nbsp; [📖 API Reference](#-api-reference) &nbsp;·&nbsp; [🤝 Contributing](#-contributing)
 
 ---
 
@@ -27,7 +27,7 @@
 
 Healthcare information should be **accessible, understandable, and immediate**. MediSense AI bridges the gap between complex medical data and everyday understanding by leveraging the power of OpenAI's GPT-4o Vision model.
 
-> **⚠️ Disclaimer:** MediSense AI is designed for **informational purposes only**. It is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider for medical concerns.
+> ⚠️ **Disclaimer:** MediSense AI is designed for **informational purposes only**. It is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider for medical concerns.
 
 <br/>
 
@@ -66,10 +66,10 @@ Get instant first-aid guidance and emergency triage assessment:
 - **Urgency Triage** — Critical / High / Moderate / Low classification
 - **Step-by-Step Instructions** — Actionable first-aid guidance
 - **Safety Warnings** — What NOT to do in emergency situations
-- **Emergency Numbers** — Quick access to global emergency services
+- **Emergency Numbers** — Quick access to global emergency services (911 · 112 · 108 · 999)
 
 ### 💬 AI Health Companion Chat
-A conversational AI for general health, wellness, and well-being guidance:
+A conversational health AI for general wellness guidance:
 - **Contextual Conversations** — Maintains chat history for continuity
 - **Evidence-Based Advice** — Nutrition, fitness, sleep, and mental health
 - **Suggestion Chips** — Quick-start conversation topics
@@ -94,16 +94,16 @@ MediSense-AI/
 └── README.md
 ```
 
-### Tech Stack
+### 🛠 Tech Stack
 
-| Layer        | Technology                  | Purpose                               |
-|:-------------|:----------------------------|:--------------------------------------|
-| **AI Engine**    | OpenAI GPT-4o Vision       | Multimodal medical analysis           |
-| **Backend**      | Node.js + Express 5        | RESTful API server                    |
-| **Frontend**     | Vanilla JS + Custom CSS    | Single-page application               |
-| **Styling**      | Custom Design System       | Glassmorphism, animations, dark theme |
-| **Typography**   | Inter + JetBrains Mono     | Modern, readable UI                   |
-| **Icons**        | Font Awesome 6             | Comprehensive icon set                |
+| Layer | Technology | Purpose |
+|---|---|---|
+| **AI Engine** | OpenAI GPT-4o Vision | Multimodal medical analysis |
+| **Backend** | Node.js + Express 5 | RESTful API server |
+| **Frontend** | Vanilla JS + Custom CSS | Single-page application |
+| **Styling** | Custom Design System | Glassmorphism, animations, dark theme |
+| **Typography** | Inter + JetBrains Mono | Modern, readable UI |
+| **Icons** | Font Awesome 6 | Comprehensive icon set |
 
 <br/>
 
@@ -111,20 +111,18 @@ MediSense-AI/
 
 ### Prerequisites
 
-- **Node.js** 18+ ([Download](https://nodejs.org/))
-- **OpenAI API Key** with GPT-4o access ([Get one](https://platform.openai.com/api-keys))
+- **Node.js** 18+ — [Download here](https://nodejs.org/)
+- **OpenAI API Key** with GPT-4o access — [Get one here](https://platform.openai.com/api-keys)
 
 ### Installation
 
 **1. Clone the repository**
-
 ```bash
 git clone https://github.com/HarshalAndhale9657/MediSense-AI.git
 cd MediSense-AI
 ```
 
 **2. Install dependencies**
-
 ```bash
 npm install
 ```
@@ -132,14 +130,12 @@ npm install
 **3. Configure environment variables**
 
 Create a `.env` file in the root directory:
-
 ```env
 OPENAI_API_KEY=your_openai_api_key_here
 PORT=3000
 ```
 
 **4. Start the server**
-
 ```bash
 # Production
 npm start
@@ -150,7 +146,7 @@ npm run dev
 
 **5. Open your browser**
 
-Navigate to **[http://localhost:3000](http://localhost:3000)** and start using MediSense AI.
+Navigate to **[http://localhost:3000](http://localhost:3000)** 🎉
 
 <br/>
 
@@ -158,34 +154,25 @@ Navigate to **[http://localhost:3000](http://localhost:3000)** and start using M
 
 All endpoints accept `POST` requests with JSON bodies and return structured JSON responses.
 
-### Core Endpoints
+| Method | Endpoint | Description | Body |
+|---|---|---|---|
+| `POST` | `/api/analyze-symptoms` | AI symptom analysis | `{ "symptoms": "string" }` |
+| `POST` | `/api/explain-report` | Text-based report explanation | `{ "reportText": "string" }` |
+| `POST` | `/api/explain-report-image` | Image-based report analysis | `{ "imageBase64": "string" }` |
+| `POST` | `/api/check-interactions` | Drug interaction check | `{ "medications": ["string"] }` |
+| `POST` | `/api/analyze-skin` | Skin condition image analysis | `{ "imageBase64": "string" }` |
+| `POST` | `/api/emergency-assess` | Emergency triage & first-aid | `{ "situation": "string" }` |
+| `POST` | `/api/health-chat` | Conversational health chat | `{ "messages": [...] }` |
 
-| Method | Endpoint                   | Description                         | Body Parameters                      |
-|:-------|:---------------------------|:------------------------------------|:-------------------------------------|
-| POST   | `/api/analyze-symptoms`    | AI symptom analysis                 | `{ "symptoms": "string" }`           |
-| POST   | `/api/explain-report`      | Text-based report explanation       | `{ "reportText": "string" }`         |
-| POST   | `/api/explain-report-image`| Image-based report analysis         | `{ "imageBase64": "string", "additionalText?": "string" }` |
-| POST   | `/api/check-interactions`  | Drug interaction check              | `{ "medications": ["string"] }`      |
-| POST   | `/api/analyze-skin`        | Skin condition image analysis       | `{ "imageBase64": "string", "description?": "string" }` |
-| POST   | `/api/emergency-assess`    | Emergency triage & first-aid        | `{ "situation": "string" }`          |
-| POST   | `/api/health-chat`         | Conversational health chat          | `{ "messages": [{ "role": "string", "content": "string" }] }` |
+> **Rate Limiting:** 20 requests per IP per 60-second window. Returns `429` when exceeded.
 
-### Rate Limiting
-
-- **20 requests** per IP per **60-second** window
-- Returns `429 Too Many Requests` when exceeded
-
-<br/>
-
-### Example Request
+### Example
 
 ```bash
 curl -X POST http://localhost:3000/api/analyze-symptoms \
   -H "Content-Type: application/json" \
   -d '{"symptoms": "persistent headache for 3 days with mild fever"}'
 ```
-
-### Example Response
 
 ```json
 {
@@ -198,16 +185,7 @@ curl -X POST http://localhost:3000/api/analyze-symptoms \
       "description": "Common viral illnesses often present with headache and low-grade fever"
     }
   ],
-  "recommendations": [
-    "Rest and stay hydrated",
-    "Monitor temperature regularly",
-    "Consult a doctor if symptoms worsen or persist beyond 5 days"
-  ],
-  "followUpQuestions": [
-    "Do you have any nasal congestion or sore throat?",
-    "Have you been in contact with anyone who is sick?"
-  ],
-  "summary": "Your symptoms suggest a moderate condition, likely viral in origin.",
+  "recommendations": ["Rest and stay hydrated", "See a doctor if symptoms persist beyond 5 days"],
   "disclaimer": "This is not a medical diagnosis. Please consult a healthcare professional."
 }
 ```
@@ -220,7 +198,6 @@ curl -X POST http://localhost:3000/api/analyze-symptoms \
 - **Server-side API calls** — Your OpenAI API key is never exposed to the client
 - **Rate limiting** — Built-in protection against excessive API usage
 - **Input validation** — All user inputs are validated before processing
-- **CORS enabled** — Configurable cross-origin resource sharing
 
 <br/>
 
@@ -232,25 +209,24 @@ curl -X POST http://localhost:3000/api/analyze-symptoms \
 - [ ] Voice-based symptom input
 - [ ] Integration with wearable health devices
 - [ ] Export analysis reports as PDF
-- [ ] Dark / Light theme toggle
 
 <br/>
 
 ## 🤝 Contributing
 
-Contributions are welcome! Here's how you can help:
+Contributions are welcome!
 
 1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
+2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
+3. **Commit** your changes: `git commit -m 'Add amazing feature'`
+4. **Push** to the branch: `git push origin feature/amazing-feature`
 5. **Open** a Pull Request
 
 <br/>
 
 ## 📄 License
 
-This project is licensed under the **ISC License** — see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **ISC License**.
 
 <br/>
 
@@ -258,7 +234,7 @@ This project is licensed under the **ISC License** — see the [LICENSE](LICENSE
 
 **Harshal Andhale**
 
-[![GitHub](https://img.shields.io/badge/GitHub-HarshalAndhale9657-181717?style=for-the-badge&logo=github)](https://github.com/HarshalAndhale9657)
+[![GitHub](https://img.shields.io/badge/GitHub-HarshalAndhale9657-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/HarshalAndhale9657)
 
 <br/>
 
@@ -266,9 +242,8 @@ This project is licensed under the **ISC License** — see the [LICENSE](LICENSE
 
 <div align="center">
 
-**Built with ❤️ and AI for accessible healthcare**
+**Built with ❤️ and AI to make healthcare more accessible**
 
 ⭐ Star this repo if you find it useful!
 
 </div>
-]]>
