@@ -7,7 +7,6 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![Express](https://img.shields.io/badge/Express-5.x-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
 [![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o-412991?style=for-the-badge&logo=openai&logoColor=white)](https://openai.com/)
-[![License](https://img.shields.io/badge/License-ISC-blue?style=for-the-badge)](LICENSE)
 
 <br/>
 
@@ -224,11 +223,6 @@ Contributions are welcome!
 
 <br/>
 
-## 📄 License
-
-This project is licensed under the **ISC License**.
-
-<br/>
 
 ## 👨‍💻 Author
 
