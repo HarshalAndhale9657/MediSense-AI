@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MediSense AI - Your Intelligent Health Companion. AI-powered symptom analysis, medical report interpretation, drug interaction checking, and health chat.">
+    <title>MediSense AI — Intelligent Health Companion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="pulse-ring" style="top: 10%; left: 15%;"></div>
+        <div class="pulse-ring" style="top: 60%; left: 80%; animation-delay: -2s;"></div>
+        <div class="pulse-ring" style="top: 80%; left: 30%; animation-delay: -4s;"></div>
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-brand" onclick="navigateTo('home')">
+            <div class="brand-icon">
+                <i class="fas fa-heartbeat"></i>
+            </div>
+            <span class="brand-text">MediSense<span class="brand-ai">AI</span></span>
+        </div>
+        <div class="nav-links">
+            <a href="#home" class="nav-link active" data-section="home"><i class="fas fa-home"></i> Home</a>
+            <a href="#symptoms" class="nav-link" data-section="symptoms"><i class="fas fa-stethoscope"></i> Symptoms</a>
+            <a href="#reports" class="nav-link" data-section="reports"><i class="fas fa-file-medical"></i> Reports</a>
+            <a href="#drugs" class="nav-link" data-section="drugs"><i class="fas fa-pills"></i> Drug Check</a>
+            <a href="#skin" class="nav-link" data-section="skin"><i class="fas fa-search"></i> Skin</a>
+            <a href="#emergency" class="nav-link nav-link-sos" data-section="emergency"><i class="fas fa-first-aid"></i> SOS</a>
+            <a href="#chat" class="nav-link" data-section="chat"><i class="fas fa-comments"></i> Chat</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <div class="hero-badge">
+                    <i class="fas fa-shield-alt"></i> AI-Powered Healthcare Assistant
+                </div>
+                <h1 class="hero-title">
+                    Your Health, <br>
+                    <span class="gradient-text">Intelligently Understood</span>
+                </h1>
+                <p class="hero-subtitle">
+                    MediSense AI combines cutting-edge artificial intelligence with medical knowledge 
+                    to help you understand your health better. Analyze symptoms, decode medical reports, 
+                    check drug interactions, and get emergency first-aid guidance — all in one place.
+                </p>
+                <div class="hero-cta">
+                    <button class="btn btn-primary btn-lg" onclick="navigateTo('symptoms')">
+                        <i class="fas fa-rocket"></i> Get Started
+                    </button>
+                    <button class="btn btn-glass btn-lg" onclick="navigateTo('chat')">
+                        <i class="fas fa-comments"></i> Talk to AI
+                    </button>
+                </div>
+
+                <!-- Feature Cards -->
+                <div class="feature-grid">
+                    <div class="feature-card" onclick="navigateTo('symptoms')">
+                        <div class="feature-icon symptom-icon">
+                            <i class="fas fa-stethoscope"></i>
+                        </div>
+                        <h3>Symptom Analyzer</h3>
+                        <p>Describe your symptoms and get AI-powered analysis with severity assessment and recommendations.</p>
+                        <span class="feature-arrow"><i class="fas fa-arrow-right"></i></span>
+                    </div>
+                    <div class="feature-card" onclick="navigateTo('reports')">
+                        <div class="feature-icon report-icon">
+                            <i class="fas fa-file-medical-alt"></i>
+                        </div>
+                        <h3>Report Explainer</h3>
+                        <p>Upload photos or paste lab reports and get plain-English explanations of every metric.</p>
+                        <span class="feature-arrow"><i class="fas fa-arrow-right"></i></span>
+                    </div>
+                    <div class="feature-card" onclick="navigateTo('drugs')">
+                        <div class="feature-icon drug-icon">
+                            <i class="fas fa-pills"></i>
+                        </div>
+                        <h3>Drug Interaction</h3>
+                        <p>Check if your medications are safe to take together. Get interaction alerts instantly.</p>
+                        <span class="feature-arrow"><i class="fas fa-arrow-right"></i></span>
+                    </div>
+                    <div class="feature-card" onclick="navigateTo('emergency')" style="border-color: rgba(239,68,68,0.2);">
+                        <div class="feature-icon emergency-icon">
+                            <i class="fas fa-first-aid"></i>
+                        </div>
+                        <h3>Emergency SOS</h3>
+                        <p>Get instant first-aid guidance and emergency triage assessment powered by AI.</p>
+                        <span class="feature-arrow"><i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="5">0</div>
+                        <div class="stat-label">AI Features</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="4">0</div>
+                        <div class="stat-label">Analysis Types</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="24">0</div>
+                        <div class="stat-label">/7 Available</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="100">0</div>
+                        <div class="stat-label">% Private</div>
+                    </div>
+                </div>
+
+                <!-- History Timeline -->
+                <div class="history-section">
+                    <h3 class="history-title"><i class="fas fa-clock"></i> Recent Activity</h3>
+                    <div class="history-timeline" id="historyTimeline">
+                        <div class="empty-history">
+                            <i class="fas fa-clock"></i>
+                            <p>Your analysis history will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Symptom Analyzer Section -->
+        <section id="symptoms" class="section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-icon symptom-icon"><i class="fas fa-stethoscope"></i></div>
+                    <h2>AI Symptom Analyzer</h2>
+                    <p>Describe your symptoms in detail and let our AI provide an intelligent analysis</p>
+                </div>
+
+                <div class="analyzer-layout">
+                    <div class="input-panel glass-card">
+                        <h3><i class="fas fa-edit"></i> Describe Your Symptoms</h3>
+                        <textarea id="symptomInput" class="text-input" rows="6" 
+                            placeholder="Example: I've had a persistent headache for 3 days, along with mild fever (100.4°F), body aches, and fatigue. The headache is mostly on the right side and gets worse when I bend down..."></textarea>
+                        
+                        <div class="quick-symptoms">
+                            <span class="quick-tag" onclick="addSymptom('headache')">🤕 Headache</span>
+                            <span class="quick-tag" onclick="addSymptom('fever')">🌡️ Fever</span>
+                            <span class="quick-tag" onclick="addSymptom('cough')">😷 Cough</span>
+                            <span class="quick-tag" onclick="addSymptom('fatigue')">😴 Fatigue</span>
+                            <span class="quick-tag" onclick="addSymptom('nausea')">🤢 Nausea</span>
+                            <span class="quick-tag" onclick="addSymptom('chest pain')">💔 Chest Pain</span>
+                            <span class="quick-tag" onclick="addSymptom('shortness of breath')">😤 Breathless</span>
+                            <span class="quick-tag" onclick="addSymptom('dizziness')">😵 Dizziness</span>
+                        </div>
+
+                        <button id="analyzeBtn" class="btn btn-primary btn-block" onclick="analyzeSymptoms()">
+                            <i class="fas fa-brain"></i> Analyze with AI
+                        </button>
+                    </div>
+
+                    <div class="result-panel" id="symptomResults">
+                        <div class="empty-state">
+                            <div class="empty-icon"><i class="fas fa-microscope"></i></div>
+                            <h3>Ready to Analyze</h3>
+                            <p>Enter your symptoms and click analyze to get AI-powered insights</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Report Explainer Section -->
+        <section id="reports" class="section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-icon report-icon"><i class="fas fa-file-medical-alt"></i></div>
+                    <h2>Medical Report Explainer</h2>
+                    <p>Upload a photo of your report or paste the text — get it explained in simple English</p>
+                </div>
+
+                <div class="analyzer-layout">
+                    <div class="input-panel glass-card">
+                        <h3><i class="fas fa-camera"></i> Upload Report Image</h3>
+                        
+                        <!-- Image Upload Area -->
+                        <div class="image-upload-area">
+                            <div class="image-dropzone" id="imageDropzone">
+                                <div class="dropzone-content">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Drag & drop your report image here</p>
+                                    <span>or click to browse</span>
+                                    <span class="dropzone-formats">Supports: JPG, PNG, WebP (Max 10MB)</span>
+                                </div>
+                            </div>
+                            <input type="file" id="reportImageInput" accept="image/*" style="display: none;">
+                            <div class="image-preview" id="imagePreview" style="display: none;"></div>
+                        </div>
+
+                        <div class="divider-or">
+                            <span>OR</span>
+                        </div>
+
+                        <h3><i class="fas fa-paste"></i> Paste Report Text</h3>
+                        <textarea id="reportInput" class="text-input" rows="6" 
+                            placeholder="Paste your lab report here. Example:&#10;&#10;Complete Blood Count (CBC)&#10;WBC: 11.2 x10^3/uL (H)&#10;RBC: 4.8 x10^6/uL&#10;Hemoglobin: 14.2 g/dL&#10;Hematocrit: 42.1%&#10;Platelets: 245 x10^3/uL"></textarea>
+
+                        <button id="explainBtn" class="btn btn-primary btn-block" onclick="explainReport()">
+                            <i class="fas fa-language"></i> Explain in Plain English
+                        </button>
+                    </div>
+
+                    <div class="result-panel" id="reportResults">
+                        <div class="empty-state">
+                            <div class="empty-icon"><i class="fas fa-file-alt"></i></div>
+                            <h3>No Report Yet</h3>
+                            <p>Upload an image or paste text to get a simplified explanation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Drug Interaction Section -->
+        <section id="drugs" class="section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-icon drug-icon"><i class="fas fa-pills"></i></div>
+                    <h2>Drug Interaction Checker</h2>
+                    <p>Enter your medications to check for potential dangerous interactions</p>
+                </div>
+
+                <div class="analyzer-layout">
+                    <div class="input-panel glass-card">
+                        <h3><i class="fas fa-capsules"></i> Your Medications</h3>
+                        <div id="drugList" class="drug-list">
+                            <!-- Drug chips appear here -->
+                        </div>
+                        <div class="drug-input-row">
+                            <input type="text" id="drugInput" class="text-field" 
+                                placeholder="Type medication name..." 
+                                onkeypress="if(event.key==='Enter')addDrug()">
+                            <button class="btn btn-glass" onclick="addDrug()">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                        </div>
+
+                        <div class="common-drugs">
+                            <span class="quick-tag" onclick="addDrugDirect('Aspirin')">💊 Aspirin</span>
+                            <span class="quick-tag" onclick="addDrugDirect('Ibuprofen')">💊 Ibuprofen</span>
+                            <span class="quick-tag" onclick="addDrugDirect('Metformin')">💊 Metformin</span>
+                            <span class="quick-tag" onclick="addDrugDirect('Lisinopril')">💊 Lisinopril</span>
+                            <span class="quick-tag" onclick="addDrugDirect('Amoxicillin')">💊 Amoxicillin</span>
+                            <span class="quick-tag" onclick="addDrugDirect('Warfarin')">💊 Warfarin</span>
+                        </div>
+
+                        <button id="checkInteractionsBtn" class="btn btn-primary btn-block" onclick="checkInteractions()">
+                            <i class="fas fa-exclamation-triangle"></i> Check Interactions
+                        </button>
+                    </div>
+
+                    <div class="result-panel" id="drugResults">
+                        <div class="empty-state">
+                            <div class="empty-icon"><i class="fas fa-prescription-bottle-alt"></i></div>
+                            <h3>Add Medications</h3>
+                            <p>Add at least 2 medications to check for interactions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skin Disease Analyzer Section -->
+        <section id="skin" class="section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-icon skin-icon"><i class="fas fa-search"></i></div>
+                    <h2>Skin Disease Analyzer</h2>
+                    <p>Upload a photo of any skin condition and get AI-powered dermatological analysis</p>
+                </div>
+
+                <div class="analyzer-layout">
+                    <div class="input-panel glass-card">
+                        <h3><i class="fas fa-camera-retro"></i> Upload Skin Image</h3>
+                        
+                        <div class="image-upload-area">
+                            <div class="image-dropzone" id="skinDropzone">
+                                <div class="dropzone-content">
+                                    <i class="fas fa-camera"></i>
+                                    <p>Drag & drop a photo of the skin condition</p>
+                                    <span>or click to take/browse a photo</span>
+                                    <span class="dropzone-formats">Supports: JPG, PNG, WebP (Max 10MB)</span>
+                                </div>
+                            </div>
+                            <input type="file" id="skinImageInput" accept="image/*" capture="environment" style="display: none;">
+                            <div class="image-preview" id="skinPreview" style="display: none;"></div>
+                        </div>
+
+                        <h3><i class="fas fa-comment-medical"></i> Describe the Condition (Optional)</h3>
+                        <textarea id="skinDescription" class="text-input" rows="3" 
+                            placeholder="E.g., Red rash appeared 2 days ago on left arm, slightly itchy, no pain..."></textarea>
+
+                        <button class="btn btn-primary btn-block" onclick="analyzeSkin()">
+                            <i class="fas fa-microscope"></i> Analyze Skin Condition
+                        </button>
+                    </div>
+
+                    <div class="result-panel" id="skinResults">
+                        <div class="empty-state">
+                            <div class="empty-icon"><i class="fas fa-search"></i></div>
+                            <h3>Upload a Photo</h3>
+                            <p>Take or upload a clear photo of the skin condition for AI analysis</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Emergency SOS Section -->
+        <section id="emergency" class="section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-icon emergency-icon"><i class="fas fa-first-aid"></i></div>
+                    <h2>Emergency SOS</h2>
+                    <p>Get instant AI-powered first-aid guidance and emergency triage</p>
+                </div>
+
+                <div class="emergency-banner">
+                    <i class="fas fa-phone-alt"></i>
+                    <div>
+                        <strong>If this is a life-threatening emergency, CALL emergency services FIRST:</strong>
+                        <span>🇺🇸 911 &nbsp;|&nbsp; 🇪🇺 112 &nbsp;|&nbsp; 🇮🇳 108 &nbsp;|&nbsp; 🇬🇧 999</span>
+                    </div>
+                </div>
+
+                <div class="analyzer-layout">
+                    <div class="input-panel glass-card emergency-card">
+                        <h3><i class="fas fa-ambulance"></i> Describe the Emergency</h3>
+                        <textarea id="emergencyInput" class="text-input" rows="5" 
+                            placeholder="Describe the emergency situation in detail. Example: Person fell from a ladder, about 6 feet, landed on their back. They're conscious but complaining of severe back pain and can't move their legs..."></textarea>
+                        
+                        <div class="quick-symptoms">
+                            <span class="quick-tag sos-tag" onclick="document.getElementById('emergencyInput').value='Someone is choking and cannot breathe'">🚨 Choking</span>
+                            <span class="quick-tag sos-tag" onclick="document.getElementById('emergencyInput').value='Severe burn from hot liquid on arm and hand'">🔥 Burns</span>
+                            <span class="quick-tag sos-tag" onclick="document.getElementById('emergencyInput').value='Deep cut that is bleeding heavily'">🩸 Bleeding</span>
+                            <span class="quick-tag sos-tag" onclick="document.getElementById('emergencyInput').value='Person suddenly collapsed and is unresponsive'">⚠️ Collapse</span>
+                            <span class="quick-tag sos-tag" onclick="document.getElementById('emergencyInput').value='Possible allergic reaction with swelling and difficulty breathing'">💉 Allergic Reaction</span>
+                            <span class="quick-tag sos-tag" onclick="document.getElementById('emergencyInput').value='Suspected broken bone after a fall'">🦴 Fracture</span>
+                        </div>
+
+                        <button class="btn btn-danger btn-block" onclick="emergencyAssess()">
+                            <i class="fas fa-first-aid"></i> Get Emergency Guidance
+                        </button>
+                    </div>
+
+                    <div class="result-panel" id="emergencyResults">
+                        <div class="empty-state">
+                            <div class="empty-icon emergency-empty-icon"><i class="fas fa-first-aid"></i></div>
+                            <h3>Emergency First-Aid</h3>
+                            <p>Describe the situation and get immediate AI-powered first-aid guidance</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Health Chat Section -->
+        <section id="chat" class="section">
+            <div class="section-container chat-container">
+                <div class="section-header">
+                    <div class="section-icon chat-icon"><i class="fas fa-robot"></i></div>
+                    <h2>AI Health Companion</h2>
+                    <p>Chat with MediSense AI about health, wellness, and well-being</p>
+                </div>
+
+                <div class="chat-window glass-card">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-bubble ai">
+                            <div class="bubble-avatar"><i class="fas fa-robot"></i></div>
+                            <div class="bubble-content">
+                                <p>Hello! 👋 I'm MediSense AI, your health companion. I can help you with:</p>
+                                <ul>
+                                    <li>🏥 General health questions</li>
+                                    <li>🥗 Nutrition and diet advice</li>
+                                    <li>🏃 Exercise and fitness tips</li>
+                                    <li>😴 Sleep and wellness guidance</li>
+                                    <li>🧠 Mental health support</li>
+                                </ul>
+                                <p>How can I help you today?</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <div class="chat-suggestions">
+                            <button class="suggestion-chip" onclick="sendSuggestion('How can I improve my sleep quality?')">💤 Improve Sleep</button>
+                            <button class="suggestion-chip" onclick="sendSuggestion('What foods boost immunity?')">🥗 Boost Immunity</button>
+                            <button class="suggestion-chip" onclick="sendSuggestion('Tips for managing stress')">🧘 Manage Stress</button>
+                            <button class="suggestion-chip" onclick="sendSuggestion('How much water should I drink daily?')">💧 Hydration</button>
+                        </div>
+                        <div class="chat-input-row">
+                            <input type="text" id="chatInput" class="chat-field" 
+                                placeholder="Ask me anything about health..." 
+                                onkeypress="if(event.key==='Enter')sendMessage()">
+                            <button class="btn btn-send" onclick="sendMessage()">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-icon" style="background: rgba(168, 85, 247, 0.15); color: #a855f7;"><i class="fas fa-info-circle"></i></div>
+                    <h2>How MediSense AI Works</h2>
+                    <p>Powered by advanced AI to democratize healthcare understanding</p>
+                </div>
+
+                <div class="about-grid">
+                    <div class="about-card">
+                        <div class="about-step">1</div>
+                        <h3>Input Your Data</h3>
+                        <p>Type symptoms, upload report photos, enter medications, or describe an emergency situation.</p>
+                    </div>
+                    <div class="about-card">
+                        <div class="about-step">2</div>
+                        <h3>AI Analyzes</h3>
+                        <p>GPT-4o with vision processes your input using medical knowledge to generate comprehensive analysis.</p>
+                    </div>
+                    <div class="about-card">
+                        <div class="about-step">3</div>
+                        <h3>Get Clear Results</h3>
+                        <p>Receive plain-English explanations, severity assessments, and actionable recommendations.</p>
+                    </div>
+                    <div class="about-card">
+                        <div class="about-step">4</div>
+                        <h3>Take Action</h3>
+                        <p>Export results, share with your doctor, or follow first-aid guidance for emergencies.</p>
+                    </div>
+                </div>
+
+                <div class="tech-stack-section">
+                    <h3>Built With</h3>
+                    <div class="tech-badges">
+                        <span class="tech-badge"><i class="fas fa-brain"></i> GPT-4o Vision</span>
+                        <span class="tech-badge"><i class="fab fa-node-js"></i> Node.js</span>
+                        <span class="tech-badge"><i class="fas fa-server"></i> Express.js</span>
+                        <span class="tech-badge"><i class="fab fa-js"></i> Vanilla JS</span>
+                        <span class="tech-badge"><i class="fas fa-palette"></i> Custom CSS</span>
+                        <span class="tech-badge"><i class="fas fa-image"></i> Vision API</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <i class="fas fa-heartbeat"></i> MediSense<span>AI</span>
+            </div>
+            <div class="footer-links">
+                <a href="#home" onclick="navigateTo('home')">Home</a>
+                <a href="#about" onclick="navigateTo('about')">About</a>
+                <a href="#chat" onclick="navigateTo('chat')">Chat</a>
+            </div>
+            <p class="footer-disclaimer">MediSense AI is for informational purposes only. Not a substitute for professional medical advice.</p>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="dna-loader">
+                <div class="dna-strand"></div>
+                <div class="dna-strand"></div>
+                <div class="dna-strand"></div>
+                <div class="dna-strand"></div>
+                <div class="dna-strand"></div>
+            </div>
+            <p class="loading-text" id="loadingText">Analyzing with AI...</p>
+        </div>
+    </div>
+
+    <!-- Disclaimer Banner -->
+    <div class="disclaimer-banner" id="disclaimerBanner">
+        <div class="disclaimer-content">
+            <i class="fas fa-info-circle"></i>
+            <span>MediSense AI provides informational content only. It is not a substitute for professional medical advice, diagnosis, or treatment.</span>
+            <button class="disclaimer-close" onclick="closeDisclaimer()"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>
