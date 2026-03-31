@@ -126,9 +126,9 @@ These are the features needed to turn the MVP into a paid product. Build in this
 - [x] Database schema for health events
 - [x] Auto-save every analysis to user's timeline
 - [x] Timeline view UI (scrollable history)
-- [ ] Personal baselines (track metrics across reports)
-- [ ] Trend detection (compare new vs. past results)
-- [ ] Monthly Health Snapshot
+- [x] Personal baselines (track metrics across reports)
+- [x] Trend detection (compare new vs. past results)
+- [x] Monthly Health Snapshot
 
 ### Priority 3: Family Health Vault
 - [ ] Family profiles UI (add/edit/switch)
@@ -252,4 +252,18 @@ RESEND_API_KEY=         # Email service
 
 ---
 
-*Last updated: March 31, 2026 — End of Session 2*
+### Session 3 — April 1, 2026 (Health Twin Dashboard & Baselines)
+**What was done:**
+- Upgraded the "Recent Activity" list into a Premium **Health Twin Dashboard** with a personalized greeting, stats cards, and timeline layout.
+- Fixed a critical auth token bug where API endpoints were missing the `Bearer` token; all analyses now securely save to the Supabase payload.
+- Implemented **Personal Baselines**: auto-computation of lab stats (like Hemoglobin) directly from previous report data.
+- Implemented **Trend Detection**: live metric trend visualization (↑, ↓, →) inside new report analyses, powered by the new `GET /api/timeline/insights` endpoint.
+- Added **Monthly Health Snapshot**: dynamic severity breakdown bars and priority concern tags.
+
+**Next session priorities (Moving to Phase 3):**
+1. **Family Health Vault:** This is the core reason users will upgrade to the ₹399/mo plan. We need a Family Profiles UI to add/switch profiles (Mom, Dad, Child). 
+2. **Per-Profile Context:** Ensure the Health Twin Timeline can filter by the active profile, not just "Self".
+
+---
+
+*Last updated: April 1, 2026 — End of Session 3*

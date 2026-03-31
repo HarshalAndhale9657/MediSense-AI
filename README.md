@@ -33,6 +33,13 @@ Healthcare information should be **accessible, understandable, and immediate**. 
 
 ## ✨ Features
 
+### 🧬 Health Twin Dashboard
+Your personal, AI-powered health repository that tracks and analyzes your history:
+- **Timeline History** — Every AI check, drug interaction, and uploaded report is securely saved
+- **Personal Baselines** — Lab report metrics (e.g., Hemoglobin) are tracked over time
+- **Trend Detection** — Live trend arrows (↑, ↓) show if your latest metrics are improving or worsening
+- **Monthly Snapshot** — See severity breakdowns and top highlighted health concerns
+
 ### 🩺 AI Symptom Analyzer
 Describe your symptoms in natural language and receive an intelligent analysis including:
 - **Severity Assessment** — Color-coded urgency levels (Low → Emergency)
@@ -194,18 +201,20 @@ curl -X POST http://localhost:3000/api/analyze-symptoms \
 
 ## 🔒 Security & Privacy
 
-- **No data storage** — MediSense AI does not persist any user-submitted medical data
-- **Server-side API calls** — Your OpenAI API key is never exposed to the client
+- **State-of-the-Art Auth** — Backed by Supabase, featuring secure Google OAuth and JWT-based session management
+- **Row-Level Security** — All user health timelines and data are protected by strict Postgres Row-Level Security policies
+- **Server-side APIs** — Your OpenAI API key is never exposed to the client dashboard
 - **Rate limiting** — Built-in protection against excessive API usage
-- **Input validation** — All user inputs are validated before processing
 
 <br/>
 
 ## 🗺️ Roadmap
 
-- [ ] User authentication & session history
+- [x] User authentication & session history
+- [x] Health Twin Dashboard (Baselines & Trend tracking)
+- [ ] Family Health Vault (Multiple profiles)
 - [ ] PDF report upload & parsing
-- [ ] Multilingual support (Hindi, Spanish, French)
+- [ ] Smart Medicine Manager & interaction reminders
 - [ ] Voice-based symptom input
 - [ ] Integration with wearable health devices
 - [ ] Export analysis reports as PDF
