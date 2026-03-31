@@ -18,6 +18,7 @@ import drugRoutes from './backend/routes/drugs.js';
 import chatRoutes from './backend/routes/chat.js';
 import emergencyRoutes from './backend/routes/emergency.js';
 import skinRoutes from './backend/routes/skin.js';
+import timelineRoutes from './backend/routes/timeline.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,6 +38,7 @@ app.use('/api/check-interactions', drugRoutes);
 app.use('/api/health-chat', chatRoutes);
 app.use('/api/emergency-assess', emergencyRoutes);
 app.use('/api/analyze-skin', skinRoutes);
+app.use('/api/timeline', timelineRoutes);
 
 // ── SPA Catch-all ──────────────────────────
 app.get('/{*splat}', (req, res) => {

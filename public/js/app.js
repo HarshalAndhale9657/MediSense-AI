@@ -144,7 +144,7 @@ async function analyzeSymptoms() {
     try {
         const res = await fetch('/api/analyze-symptoms', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders(),
             body: JSON.stringify({ symptoms })
         });
         
@@ -333,7 +333,7 @@ async function explainReport() {
         if (hasImage) {
             const res = await fetch('/api/explain-report/image', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ 
                     imageBase64: state.uploadedImageBase64,
                     additionalText: reportText || ''
@@ -344,7 +344,7 @@ async function explainReport() {
         } else {
             const res = await fetch('/api/explain-report', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ reportText })
             });
             if (!res.ok) throw new Error('Analysis failed');
@@ -368,8 +368,36 @@ function renderReportResults(data) {
     
     let metricsHTML = '';
     if (data.metrics && data.metrics.length) {
+        // Build trend lookup from stored baselines
+        const trendMap = {};
+        if (window.healthInsights?.baselines) {
+            for (const b of window.healthInsights.baselines) {
+                trendMap[b.name] = b;
+            }
+        }
+
         metricsHTML = data.metrics.map(m => {
             const statusClass = `status-${(m.status || 'normal').toLowerCase()}`;
+            
+            // Trend comparison with baseline
+            let trendIndicator = '';
+            const baseline = trendMap[m.name];
+            if (baseline) {
+                const cur = parseFloat(m.value);
+                const prev = parseFloat(baseline.value);
+                if (!isNaN(cur) && !isNaN(prev)) {
+                    if (cur > prev) {
+                        const diff = (cur - prev).toFixed(1);
+                        trendIndicator = `<span class="metric-trend trend-up" title="Previously: ${baseline.value}">↑ +${diff} from last</span>`;
+                    } else if (cur < prev) {
+                        const diff = (prev - cur).toFixed(1);
+                        trendIndicator = `<span class="metric-trend trend-down" title="Previously: ${baseline.value}">↓ -${diff} from last</span>`;
+                    } else {
+                        trendIndicator = `<span class="metric-trend trend-stable" title="Previously: ${baseline.value}">→ No change</span>`;
+                    }
+                }
+            }
+
             return `
                 <div class="metric-card">
                     <div class="metric-header">
@@ -380,6 +408,7 @@ function renderReportResults(data) {
                         <span class="metric-value">Value: ${m.value}</span>
                         <span>Normal: ${m.normalRange}</span>
                     </div>
+                    ${trendIndicator}
                     <div class="metric-explanation">${m.explanation}</div>
                 </div>
             `;
@@ -491,7 +520,7 @@ async function checkInteractions() {
     try {
         const res = await fetch('/api/check-interactions', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders(),
             body: JSON.stringify({ medications: state.medications })
         });
         
@@ -579,7 +608,7 @@ async function sendMessage() {
     try {
         const res = await fetch('/api/health-chat', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders(),
             body: JSON.stringify({ messages: state.chatMessages })
         });
         
@@ -675,7 +704,7 @@ async function emergencyAssess() {
     try {
         const res = await fetch('/api/emergency-assess', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders(),
             body: JSON.stringify({ situation })
         });
         
@@ -770,8 +799,17 @@ function saveToHistory(type, input, result) {
     if (state.analysisHistory.length > 20) state.analysisHistory.pop();
     
     localStorage.setItem('medisense_history', JSON.stringify(state.analysisHistory));
-    renderHistory();
+    
+    if (window.medisenseAuth && window.medisenseAuth.isLoggedIn() && window.fetchHealthTwinTimeline) {
+        // Wait briefly for the backend DB insert to finish before fetching
+        setTimeout(() => window.fetchHealthTwinTimeline(), 500);
+    } else {
+        renderHistory();
+    }
 }
+
+// Expose so auth.js can revert to local storage timeline on logout
+window.renderHistory = renderHistory;
 
 function renderHistory() {
     const container = document.getElementById('historyTimeline');
@@ -780,29 +818,40 @@ function renderHistory() {
     if (!state.analysisHistory.length) {
         container.innerHTML = `
             <div class="empty-history">
-                <i class="fas fa-clock"></i>
-                <p>Your analysis history will appear here</p>
+                <div class="empty-twin-icon">
+                    <i class="fas fa-dna"></i>
+                </div>
+                <h4>Your Health Twin is Ready</h4>
+                <p>Start using any analyzer to build your personal health history. Every check, report, and interaction is securely stored in your timeline.</p>
             </div>
         `;
         return;
     }
     
-    const typeIcons = { symptom: 'fa-stethoscope', report: 'fa-file-medical', drug: 'fa-pills', skin: 'fa-search' };
-    const typeLabels = { symptom: 'Symptom Analysis', report: 'Report Explained', drug: 'Drug Check', skin: 'Skin Analysis' };
-    const typeColors = { symptom: 'var(--primary-light)', report: 'var(--accent-light)', drug: 'var(--warning)', skin: '#a855f7' };
+    const typeIcons = { symptom: 'fa-stethoscope', report: 'fa-file-medical', drug: 'fa-pills', skin: 'fa-search', emergency: 'fa-first-aid' };
+    const typeLabels = { symptom: 'Symptom Analysis', report: 'Report Explained', drug: 'Drug Check', skin: 'Skin Analysis', emergency: 'Emergency SOS' };
+    const typeColors = { symptom: '#818cf8', report: '#22d3ee', drug: '#f59e0b', skin: '#a855f7', emergency: '#ef4444' };
     
-    container.innerHTML = state.analysisHistory.slice(0, 5).map(entry => {
+    container.innerHTML = state.analysisHistory.slice(0, 10).map((entry, index) => {
         const date = new Date(entry.timestamp);
         const timeAgo = getTimeAgo(date);
+        const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const color = typeColors[entry.type] || '#818cf8';
         return `
-            <div class="history-item">
-                <div class="history-icon" style="color: ${typeColors[entry.type]}; background: ${typeColors[entry.type]}15;">
+            <div class="twin-event-card" style="--event-color: ${color}; animation-delay: ${index * 0.05}s">
+                <div class="twin-event-line"></div>
+                <div class="twin-event-dot">
                     <i class="fas ${typeIcons[entry.type] || 'fa-circle'}"></i>
                 </div>
-                <div class="history-info">
-                    <div class="history-label">${typeLabels[entry.type] || 'Analysis'}</div>
-                    <div class="history-input">${entry.input}${entry.input.length >= 100 ? '...' : ''}</div>
-                    <div class="history-time">${timeAgo}</div>
+                <div class="twin-event-content">
+                    <div class="twin-event-top">
+                        <span class="twin-event-type">${typeLabels[entry.type] || 'Analysis'}</span>
+                    </div>
+                    <div class="twin-event-input">${entry.input}${entry.input.length >= 100 ? '...' : ''}</div>
+                    <div class="twin-event-meta">
+                        <span class="twin-event-date"><i class="far fa-clock"></i> ${timeAgo}</span>
+                        <span class="twin-event-fulldate">${dateStr}</span>
+                    </div>
                 </div>
             </div>
         `;
@@ -926,7 +975,7 @@ async function analyzeSkin() {
     try {
         const res = await fetch('/api/analyze-skin', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders(),
             body: JSON.stringify({ imageBase64: state.skinImageBase64, description })
         });
         if (!res.ok) throw new Error('Analysis failed');

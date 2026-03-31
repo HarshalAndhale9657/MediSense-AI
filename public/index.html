@@ -72,7 +72,6 @@
     <!-- Main Content -->
     <main class="main-content">
         
-        <!-- Home Section -->
         <section id="home" class="section active">
             <div class="hero">
                 <div class="hero-badge">
@@ -152,13 +151,109 @@
                     </div>
                 </div>
 
-                <!-- History Timeline -->
-                <div class="history-section">
-                    <h3 class="history-title"><i class="fas fa-clock"></i> Recent Activity</h3>
-                    <div class="history-timeline" id="historyTimeline">
-                        <div class="empty-history">
-                            <i class="fas fa-clock"></i>
-                            <p>Your analysis history will appear here</p>
+                <!-- Health Twin Dashboard -->
+                <div class="health-twin-dashboard" id="healthTwinDashboard">
+                    <!-- Profile Header — personalized greeting -->
+                    <div class="twin-profile-header" id="twinProfileHeader">
+                        <div class="twin-avatar-area">
+                            <div class="twin-avatar" id="twinAvatar">
+                                <span data-auth-avatar>U</span>
+                                <div class="twin-avatar-ring"></div>
+                            </div>
+                            <div class="twin-greeting">
+                                <h3 class="twin-name">Welcome back, <span data-auth-name>User</span></h3>
+                                <p class="twin-subtitle">Your personal health timeline — powered by AI</p>
+                            </div>
+                        </div>
+                        <div class="twin-pro-badge">
+                            <i class="fas fa-shield-alt"></i> Health Twin Pro
+                        </div>
+                    </div>
+
+                    <!-- Quick Health Stats -->
+                    <div class="twin-stats-row" id="twinStatsRow">
+                        <div class="twin-stat-card">
+                            <div class="twin-stat-icon" style="background: rgba(99,102,241,0.15); color: var(--primary-light);">
+                                <i class="fas fa-heartbeat"></i>
+                            </div>
+                            <div class="twin-stat-info">
+                                <span class="twin-stat-value" id="twinTotalAnalyses">0</span>
+                                <span class="twin-stat-label">Analyses</span>
+                            </div>
+                        </div>
+                        <div class="twin-stat-card">
+                            <div class="twin-stat-icon" style="background: rgba(34,197,94,0.15); color: var(--success);">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="twin-stat-info">
+                                <span class="twin-stat-value" id="twinStreak">—</span>
+                                <span class="twin-stat-label">Last Active</span>
+                            </div>
+                        </div>
+                        <div class="twin-stat-card">
+                            <div class="twin-stat-icon" style="background: rgba(168,85,247,0.15); color: #a855f7;">
+                                <i class="fas fa-dna"></i>
+                            </div>
+                            <div class="twin-stat-info">
+                                <span class="twin-stat-value" id="twinTypes">0</span>
+                                <span class="twin-stat-label">Types Used</span>
+                            </div>
+                        </div>
+                        <div class="twin-stat-card">
+                            <div class="twin-stat-icon" style="background: rgba(6,182,212,0.15); color: var(--accent-light);">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="twin-stat-info">
+                                <span class="twin-stat-value" id="twinCloud">Synced</span>
+                                <span class="twin-stat-label">Cloud Status</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Health Baselines -->
+                    <div class="twin-baselines-section" id="twinBaselinesSection" style="display:none;">
+                        <div class="twin-section-header">
+                            <h3 class="twin-section-title"><i class="fas fa-chart-line"></i> Your Health Baselines</h3>
+                            <span class="twin-section-badge" id="baselineCount"></span>
+                        </div>
+                        <p class="twin-section-desc">Key metrics from your lab reports — tracked over time</p>
+                        <div class="baselines-grid" id="baselinesGrid"></div>
+                    </div>
+
+                    <!-- Monthly Health Snapshot -->
+                    <div class="twin-snapshot-section" id="twinSnapshotSection" style="display:none;">
+                        <div class="twin-section-header">
+                            <h3 class="twin-section-title"><i class="fas fa-calendar-alt"></i> Monthly Snapshot</h3>
+                            <span class="twin-snapshot-period" id="snapshotPeriod"></span>
+                        </div>
+                        <div class="snapshot-grid">
+                            <div class="snapshot-stat" id="snapshotAnalyses">
+                                <div class="snapshot-stat-value">0</div>
+                                <div class="snapshot-stat-label">Analyses this month</div>
+                            </div>
+                            <div class="snapshot-stat" id="snapshotTypes">
+                                <div class="snapshot-stat-value">0</div>
+                                <div class="snapshot-stat-label">Feature types used</div>
+                            </div>
+                            <div class="snapshot-severity" id="snapshotSeverity"></div>
+                            <div class="snapshot-concerns" id="snapshotConcerns"></div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Events -->
+                    <div class="twin-timeline-section">
+                        <div class="twin-timeline-header">
+                            <h3 class="twin-timeline-title"><i class="fas fa-stream"></i> Health Timeline</h3>
+                            <span class="twin-timeline-count" id="twinTimelineCount"></span>
+                        </div>
+                        <div class="twin-timeline" id="historyTimeline">
+                            <div class="empty-history">
+                                <div class="empty-twin-icon">
+                                    <i class="fas fa-dna"></i>
+                                </div>
+                                <h4>Your Health Twin is Ready</h4>
+                                <p>Start using any analyzer to build your personal health history. Every check, report, and interaction is securely stored in your timeline.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -591,6 +686,7 @@
     </div>
 
     <script src="/js/auth.js" type="module"></script>
+    <script src="/js/timeline.js" type="module"></script>
     <script src="/js/app.js"></script>
 </body>
 </html>

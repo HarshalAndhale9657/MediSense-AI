@@ -6,10 +6,12 @@ import { Router } from 'express';
 import { openai } from '../config/openai.js';
 import { SYSTEM_PROMPTS } from '../config/prompts.js';
 import { rateLimit } from '../middleware/rateLimiter.js';
+import { optionalAuth } from '../middleware/auth.js';
+import { healthTwinService } from '../services/healthTwin.js';
 
 const router = Router();
 
-router.post('/', rateLimit(), async (req, res) => {
+router.post('/', rateLimit(), optionalAuth, async (req, res) => {
     try {
         const { imageBase64, description } = req.body;
         if (!imageBase64) {
@@ -40,7 +42,9 @@ router.post('/', rateLimit(), async (req, res) => {
             max_tokens: 4096
         });
 
-        res.json(JSON.parse(completion.choices[0].message.content));
+        const aiResponse = JSON.parse(completion.choices[0].message.content);
+        healthTwinService.insertEvent(req, 'skin', { description }, aiResponse);
+        res.json(aiResponse);
     } catch (error) {
         console.error('Skin analysis error:', error);
         res.status(500).json({ error: 'Skin analysis failed. Please try again.' });

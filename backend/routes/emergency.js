@@ -5,11 +5,13 @@
 import { Router } from 'express';
 import { openai } from '../config/openai.js';
 import { SYSTEM_PROMPTS } from '../config/prompts.js';
+import { optionalAuth } from '../middleware/auth.js';
+import { healthTwinService } from '../services/healthTwin.js';
 
 const router = Router();
 
 // No rate limit on emergency — should always be accessible
-router.post('/', async (req, res) => {
+router.post('/', optionalAuth, async (req, res) => {
     try {
         const { situation } = req.body;
         if (!situation || typeof situation !== 'string' || situation.length < 3) {
@@ -26,7 +28,9 @@ router.post('/', async (req, res) => {
             temperature: 0.2
         });
 
-        res.json(JSON.parse(completion.choices[0].message.content));
+        const aiResponse = JSON.parse(completion.choices[0].message.content);
+        healthTwinService.insertEvent(req, 'emergency', { situation }, aiResponse);
+        res.json(aiResponse);
     } catch (error) {
         console.error('Emergency assessment error:', error);
         res.status(500).json({ error: 'Emergency assessment failed. CALL EMERGENCY SERVICES if this is urgent.' });

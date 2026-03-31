@@ -141,5 +141,19 @@ export const auth = {
             const name = this.user?.fullName || this.user?.email || 'U';
             el.textContent = name.charAt(0).toUpperCase();
         });
+
+        // Trigger Health Twin fetch if logged in
+        if (loggedIn && window.fetchHealthTwinTimeline) {
+            window.fetchHealthTwinTimeline();
+        } else if (!loggedIn && window.renderHistory) {
+            // Revert back to local storage history
+            window.renderHistory();
+        }
     }
 };
+
+// Expose globally so app.js can check auth
+window.medisenseAuth = auth;
+
+// Auto-initialize from localStorage on load
+auth.init();

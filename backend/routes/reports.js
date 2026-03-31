@@ -6,11 +6,13 @@ import { Router } from 'express';
 import { openai } from '../config/openai.js';
 import { SYSTEM_PROMPTS } from '../config/prompts.js';
 import { rateLimit } from '../middleware/rateLimiter.js';
+import { optionalAuth } from '../middleware/auth.js';
+import { healthTwinService } from '../services/healthTwin.js';
 
 const router = Router();
 
 // Text-based report explanation
-router.post('/', rateLimit(), async (req, res) => {
+router.post('/', rateLimit(), optionalAuth, async (req, res) => {
     try {
         const { reportText } = req.body;
         if (!reportText || typeof reportText !== 'string' || reportText.length < 5) {
@@ -27,7 +29,9 @@ router.post('/', rateLimit(), async (req, res) => {
             temperature: 0.3
         });
 
-        res.json(JSON.parse(completion.choices[0].message.content));
+        const aiResponse = JSON.parse(completion.choices[0].message.content);
+        healthTwinService.insertEvent(req, 'report', { reportText }, aiResponse);
+        res.json(aiResponse);
     } catch (error) {
         console.error('Report explanation error:', error);
         res.status(500).json({ error: 'Report analysis failed. Please try again.' });
@@ -35,7 +39,7 @@ router.post('/', rateLimit(), async (req, res) => {
 });
 
 // Image-based report analysis
-router.post('/image', rateLimit(), async (req, res) => {
+router.post('/image', rateLimit(), optionalAuth, async (req, res) => {
     try {
         const { imageBase64, additionalText } = req.body;
         if (!imageBase64) {
@@ -72,7 +76,10 @@ router.post('/image', rateLimit(), async (req, res) => {
             max_tokens: 4096
         });
 
-        res.json(JSON.parse(completion.choices[0].message.content));
+        const aiResponse = JSON.parse(completion.choices[0].message.content);
+        // Only save that it was an image report, don't save the whole base64 string to avoid DB bloat for MVP
+        healthTwinService.insertEvent(req, 'report', { type: 'image', additionalText }, aiResponse);
+        res.json(aiResponse);
     } catch (error) {
         console.error('Image report analysis error:', error);
         res.status(500).json({ error: 'Image analysis failed. Please try again.' });

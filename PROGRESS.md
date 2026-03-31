@@ -121,11 +121,11 @@ These are the features needed to turn the MVP into a paid product. Build in this
 - [x] Protected routes middleware
 - [x] User dashboard (replaces current Home section)
 
-### Priority 2: Health Twin (Flagship Feature) — 🟡 In Progress
-- [ ] Execute `supabase/schema.sql` in Supabase editor
-- [ ] Database schema for health events
-- [ ] Auto-save every analysis to user's timeline
-- [ ] Timeline view UI (scrollable history)
+### Priority 2: Health Twin (Flagship Feature) — 🟢 Done
+- [x] Execute `supabase/schema.sql` in Supabase editor
+- [x] Database schema for health events
+- [x] Auto-save every analysis to user's timeline
+- [x] Timeline view UI (scrollable history)
 - [ ] Personal baselines (track metrics across reports)
 - [ ] Trend detection (compare new vs. past results)
 - [ ] Monthly Health Snapshot
@@ -187,7 +187,7 @@ RESEND_API_KEY=         # Email service
 ## 🐛 Known Issues / Technical Debt
 
 - [x] All backend routes in ONE file (server.js) — split into modular `backend/routes/` 
-- [ ] No database — *Authentication added, but records not saving yet*
+- [x] No database — *Authentication added, Health Twin Database added.*
 - [x] No authentication — *Supabase Auth added and functioning*
 - [ ] Rate limiter is in-memory only — resets on server restart
 - [ ] No input sanitization beyond basic length checks
@@ -236,10 +236,20 @@ RESEND_API_KEY=         # Email service
 - Created the PostgreSQL schema for the "Health Twin" (`supabase/schema.sql`)
 
 **Next session priorities (START HERE NEXT TIME):**
-1. **Database:** The user needs to paste and run the contents of `supabase/schema.sql` into their Supabase SQL editor to create the `profiles` and `health_events` tables.
-2. **Backend:** Update the analysis routes (symptoms, skin, reports, drugs) so they automatically insert a row into `health_events` if `req.user` is logged in.
-3. **Frontend:** Create the Health Twin Timeline dashboard UI to fetch and display these saved events.
+1. **Health Twin Enhancements:** Implement Personal baselines and Trend detection logic.
+2. **Family Health Vault:** Build Family profiles UI (add/edit/switch) so users can analyze data for dependents.
+3. **Smart Medicine Manager:** Start building medication CRUD interface and notifications.
 
 ---
 
-*Last updated: March 30, 2026 — End of Session 1*
+### Session 2 — March 31, 2026 (Health Twin Integration)
+**What was done:**
+- Initialized Supabase database schema for profiles and health_events tables
+- Updated backend routes (symptoms, reports, skin, drugs, emergency) to save AI analysis to Supabase
+- Created a standalone `healthTwin.js` service for authenticated database inserts
+- Added a GET `/api/timeline` route for fetching a user's unified health history
+- Integrated Health Twin Timeline into the frontend UI (`timeline.js`), replacing local-storage history when logged in.
+
+---
+
+*Last updated: March 31, 2026 — End of Session 2*

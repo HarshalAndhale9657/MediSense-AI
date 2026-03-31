@@ -6,10 +6,12 @@ import { Router } from 'express';
 import { openai } from '../config/openai.js';
 import { SYSTEM_PROMPTS } from '../config/prompts.js';
 import { rateLimit } from '../middleware/rateLimiter.js';
+import { optionalAuth } from '../middleware/auth.js';
+import { healthTwinService } from '../services/healthTwin.js';
 
 const router = Router();
 
-router.post('/', rateLimit(), async (req, res) => {
+router.post('/', rateLimit(), optionalAuth, async (req, res) => {
     try {
         const { medications } = req.body;
         if (!Array.isArray(medications) || medications.length < 2) {
@@ -26,7 +28,9 @@ router.post('/', rateLimit(), async (req, res) => {
             temperature: 0.3
         });
 
-        res.json(JSON.parse(completion.choices[0].message.content));
+        const aiResponse = JSON.parse(completion.choices[0].message.content);
+        healthTwinService.insertEvent(req, 'drug', { medications }, aiResponse);
+        res.json(aiResponse);
     } catch (error) {
         console.error('Drug interaction error:', error);
         res.status(500).json({ error: 'Interaction check failed. Please try again.' });
